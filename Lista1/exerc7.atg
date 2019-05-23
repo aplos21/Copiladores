@@ -1,0 +1,79 @@
+/*
+  
+  Mateus Medeiros de Souza 21550192
+  Yago Lopes
+
+*/
+
+COMPILER Simple
+
+CHARACTERS
+	digito = "0123456789".
+    naoZero = "123456789".
+    
+    
+    lMai = 'A'..'Z'.
+    lMin = 'a'..'z'.
+    letra = lMai + lMin.
+    especial = "+-*/".
+    pontV = ";".
+    carct = "!&".
+
+
+TOKENS
+	
+
+	numero = digito{digito}.
+	ponV = pontV.
+	pontuacao = especial.
+	palavra = letra { letra | digito |carct}.
+	
+
+	
+
+IGNORE '\t' + '\r' + '\n'
+
+PRODUCTIONS
+
+	
+
+	Simple = {(Comentario) | Inc }.
+
+	Inc	= "programa" palavra Global .
+    
+	Global = { InicFim | FunDecl }.
+
+    FunDecl	=	"funcao" palavra "(" {palavra ":" tipo [","]}  ")" ":" tipo.
+    InicFim =  "inicio"  {Return | Var | Leia | Delta | Raiz | Se | 
+    Escreva | Comentario | Senao } "fim".
+
+
+ 
+    
+    /*calculo*/
+    Return = "retorne"  Termo ";". 
+	Termo =   palavra { sinalOp (palavra | numero) }.
+
+
+
+	/*variavel*/
+	Var = "var" palavra{(",") palavra } ":" tipo ";".
+    /*"retorne"  palavra especial{palavra}";".*/
+	tipo = "int" | "real".
+	Leia = "leia" "(" '"' palavra  "?" '"' {(",")palavra}  ")" ";".
+	
+	Delta = palavra "=" [palavra]{"(" palavra{(",") palavra} ")" | 
+	[sinalOp] (numero | palavra){ sinalOp ( palavra | numero) | (sinalOp) palavra "(" palavra ")"} } ";".
+
+	Raiz = palavra"(" palavra ")".
+	Se = "se" "(" palavra sinal numero")".
+	sinal = "=="| "!=" | ">" | "<" | .
+	sinalOp = "*"|"/"|"-"|"+" .
+	Escreva = "escreva" "(" ('"' palavra{palavra}[":"] '"') {(",")palavra}  ")" ";".
+	Comentario = "/*" (palavra | "programa"){palavra | "programa"} "*/".
+	Senao = "senao" InicFim.
+
+ 
+END Simple.
+
+
